@@ -51,7 +51,7 @@ public class GifsController extends Controller implements GifsView, GifsAdapter.
     Toolbar toolbar;
 
     @Inject
-    GifsPresenter gifsPresenter;
+    IGifsPresenter gifsPresenter;
 
     private GifsAdapter gifsAdapter;
 
@@ -64,7 +64,7 @@ public class GifsController extends Controller implements GifsView, GifsAdapter.
         gifsComponent.inject(this);
         gifsAdapter = new GifsAdapter(this);
         gifsPresenter.setView(this);
-        gifsPresenter.create("android");
+        gifsPresenter.searchGifs("android");
     }
 
     @NonNull
@@ -94,7 +94,7 @@ public class GifsController extends Controller implements GifsView, GifsAdapter.
                 .filter(charSequence -> charSequence.length() > 2)
                 .debounce(500, TimeUnit.MILLISECONDS)
                 .map(CharSequence::toString)
-                .subscribe(s -> gifsPresenter.create(s));
+                .subscribe(s -> gifsPresenter.searchGifs(s));
     }
 
     @Override

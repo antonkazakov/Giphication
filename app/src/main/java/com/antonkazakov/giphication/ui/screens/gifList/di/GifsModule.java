@@ -6,6 +6,7 @@ import com.antonkazakov.giphication.domain.GifsInteractor;
 import com.antonkazakov.giphication.domain.TrendingInteractor;
 import com.antonkazakov.giphication.ui.di.FragmentScope;
 import com.antonkazakov.giphication.ui.screens.gifList.GifsPresenter;
+import com.antonkazakov.giphication.ui.screens.gifList.IGifsPresenter;
 
 import dagger.Module;
 import dagger.Provides;
@@ -19,10 +20,10 @@ public class GifsModule {
 
     @FragmentScope
     @Provides
-    public GifsPresenter provideGifsPresenter(DislikeInteractor dislikeInteractor,
-                                              LikeInteracotr likeInteracotr,
-                                              GifsInteractor gifsInteractor,
-                                              TrendingInteractor trendingInteractor) {
+    public IGifsPresenter provideGifsPresenter(DislikeInteractor dislikeInteractor,
+                                               LikeInteracotr likeInteracotr,
+                                               GifsInteractor gifsInteractor,
+                                               TrendingInteractor trendingInteractor) {
         return new GifsPresenter(dislikeInteractor,likeInteracotr, gifsInteractor, trendingInteractor);
     }
 

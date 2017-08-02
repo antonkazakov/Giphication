@@ -18,7 +18,7 @@ import rx.schedulers.Schedulers;
  * @date 01.08.17.
  */
 
-public class GifsPresenter {
+public class GifsPresenter implements IGifsPresenter {
 
     private GifsView gifsView;
 
@@ -38,43 +38,56 @@ public class GifsPresenter {
         this.trendingInteractor = trendingInteractor;
     }
 
-    public void create(String query) {
+    @Override
+    public void searchGifs(String query) {
         gifsInteractor.buildAndNoExecute(query)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(gifEntities -> gifsView.loadData(gifEntities),
-                        throwable -> Log.e("TESTTEST", "call: ", throwable));
+                .subscribe(gifEntities -> {
+                            if (gifsView != null)
+                                gifsView.loadData(gifEntities);
+                        },
+                        throwable -> Log.e("searchGifs", "call: ", throwable));
     }
 
+    @Override
     public void getTrending() {
         trendingInteractor.buildAndNoExecute(null)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(gifEntities -> gifsView.loadData(gifEntities));
+                .subscribe(gifEntities -> {
+                    if (gifsView != null)
+                        gifsView.loadData(gifEntities);
+                });
     }
 
+    @Override
     public void likeGif(GifEntity gifEntity) {
         dislikeInteractor.buildAndNoExecute(gifEntity)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aBoolean -> {
-                    if (!aBoolean){
-                        gifsView.showError("Error when liking post");
+                    if (!aBoolean) {
+                        if (gifsView != null)
+                            gifsView.showError("Error when liking post");
                     }
                 });
     }
 
+    @Override
     public void dislikeGif(GifEntity gifEntity) {
         likeInteracotr.buildAndNoExecute(gifEntity)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aBoolean -> {
-                    if (!aBoolean){
-                        gifsView.showError("Error when disliking post");
+                    if (!aBoolean) {
+                        if (gifsView != null)
+                            gifsView.showError("Error when disliking post");
                     }
                 });
     }
 
+    @Override
     public void setView(GifsView gifsView) {
         this.gifsView = gifsView;
     }
