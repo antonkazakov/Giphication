@@ -1,27 +1,53 @@
 package com.antonkazakov.giphication.data.entities.beans;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
+
+import io.realm.RealmModel;
+import io.realm.annotations.RealmClass;
+
 
 /**
  * @author Anton Kazakov
  * @date 01.08.17.
  */
-
-public class GifEntity {
+@RealmClass
+public class GifEntity implements Parcelable, RealmModel {
 
     @NonNull
     private String id;
     @NonNull
-    private String url;
+    private String thumbnail;
     private long likes;
     private long dislikes;
+    @NonNull
+    private String url;
 
-    public String getId() {
-        return id;
+    private boolean liked;
+    private boolean disliked;
+
+    public GifEntity(@NonNull String id) {
+        this.id = id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public GifEntity() {
+    }
+
+    public boolean isLiked() {
+        return liked;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
+    }
+
+    public boolean isDisliked() {
+        return disliked;
+    }
+
+    public void setDisliked(boolean disliked) {
+        this.disliked = disliked;
     }
 
     public String getUrl() {
@@ -30,6 +56,23 @@ public class GifEntity {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    @NonNull
+    public String getId() {
+        return id;
+    }
+
+    public void setId(@NonNull String id) {
+        this.id = id;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     public long getLikes() {
@@ -52,12 +95,13 @@ public class GifEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder("GifEntity{");
         sb.append("id='").append(id).append('\'');
-        sb.append(", url='").append(url).append('\'');
+        sb.append(", thumbnail='").append(thumbnail).append('\'');
         sb.append(", likes=").append(likes);
         sb.append(", dislikes=").append(dislikes);
         sb.append('}');
         return sb.toString();
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -68,7 +112,10 @@ public class GifEntity {
 
         if (likes != gifEntity.likes) return false;
         if (dislikes != gifEntity.dislikes) return false;
+        if (liked != gifEntity.liked) return false;
+        if (disliked != gifEntity.disliked) return false;
         if (!id.equals(gifEntity.id)) return false;
+        if (!thumbnail.equals(gifEntity.thumbnail)) return false;
         return url.equals(gifEntity.url);
 
     }
@@ -76,9 +123,45 @@ public class GifEntity {
     @Override
     public int hashCode() {
         int result = id.hashCode();
-        result = 31 * result + url.hashCode();
+        result = 31 * result + thumbnail.hashCode();
         result = 31 * result + (int) (likes ^ (likes >>> 32));
         result = 31 * result + (int) (dislikes ^ (dislikes >>> 32));
+        result = 31 * result + url.hashCode();
+        result = 31 * result + (liked ? 1 : 0);
+        result = 31 * result + (disliked ? 1 : 0);
         return result;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.thumbnail);
+        dest.writeLong(this.likes);
+        dest.writeLong(this.dislikes);
+    }
+
+
+    protected GifEntity(Parcel in) {
+        this.id = in.readString();
+        this.thumbnail = in.readString();
+        this.likes = in.readLong();
+        this.dislikes = in.readLong();
+    }
+
+    public static final Parcelable.Creator<GifEntity> CREATOR = new Parcelable.Creator<GifEntity>() {
+        @Override
+        public GifEntity createFromParcel(Parcel source) {
+            return new GifEntity(source);
+        }
+
+        @Override
+        public GifEntity[] newArray(int size) {
+            return new GifEntity[size];
+        }
+    };
 }

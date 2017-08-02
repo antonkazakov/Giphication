@@ -3,7 +3,7 @@ package com.antonkazakov.giphication.data.mapper;
 import android.support.annotation.NonNull;
 
 import com.antonkazakov.giphication.data.entities.beans.GifEntity;
-import com.antonkazakov.giphication.data.entities.dto.search.DataItem;
+import com.antonkazakov.giphication.data.entities.dto.tranding.DataItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,14 +12,13 @@ import javax.inject.Inject;
 
 /**
  * @author Anton Kazakov
- * @date 01.08.17.
+ * @date 02.08.17.
  */
 
-public class TestMapper implements IMapper<DataItem, GifEntity> {
+public class TrendingMapper implements IMapper<DataItem, GifEntity> {
 
     @Inject
-    public TestMapper() {
-
+    public TrendingMapper() {
     }
 
     @NonNull
@@ -41,5 +40,4 @@ public class TestMapper implements IMapper<DataItem, GifEntity> {
         }
         return gifEntities;
     }
-
 }
